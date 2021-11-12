@@ -3,6 +3,8 @@ import './App.css';
 import Weather from './components/Weather.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
+require('dotenv').config();
+
 class App extends Component {
   state = {
     locationName: null,
@@ -31,7 +33,7 @@ class App extends Component {
   }
 
   callForeactApi = async () => {
-    const response = await fetch('http://localhost:8080/api/forecast');
+    const response = await fetch(`http://localhost:8081/api/forecast`);
     const body = await response;
 
     if (response.status !== 200) throw Error('Error occured during fetching the forecast');
@@ -39,7 +41,7 @@ class App extends Component {
   };
 
   callAirPollutionApi = async () => {
-    const response = await fetch('http://localhost:8080/api/air');
+    const response = await fetch(`http://localhost:8081/api/air`);
     const body = await response;
 
     if (response.status !== 200) throw Error('Error occured during fetching the air pollution');
@@ -47,7 +49,7 @@ class App extends Component {
   };
 
   callLocationApi = async() => {
-    const response = await fetch('http://localhost:8080/api/location');
+    const response = await fetch(`http://localhost:8081/api/location`);
     const body = await response;
     return body.json();
   };

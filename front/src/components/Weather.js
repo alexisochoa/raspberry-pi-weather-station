@@ -34,7 +34,7 @@ const Weather = ({ city, icon, feelsLike, summary, tempMin, tempMax, hourly, pol
         </div>
         <div className="col-2">
           <div className="icon-today">
-            <img src={icon} width="50" height="50" />
+            <img src={icon} width="50" height="50" alt="weather_img" />
           </div>
         </div>
         <div className="col">

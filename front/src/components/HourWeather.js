@@ -6,7 +6,7 @@ const HourWeather = ({ data }) => {
     <div>
       {new Date(data.time * 1000).getHours()}:00
       <div className="icon-hourly">
-        <img src={data.icon} width="50" height="50" />
+        <img src={data.icon} width="50" height="50" alt="weather_img" />
       </div>
       <div>
         {Math.round(data.temperature)}&deg;C
