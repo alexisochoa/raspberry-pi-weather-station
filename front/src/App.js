@@ -14,15 +14,15 @@ class App extends Component {
 
   componentDidMount() {
     Promise.all([
-      this.callLocationApi(),
       this.callForeactApi(),
+      this.callLocationApi(),
       this.callAirPollutionApi()
     ])
     .then(response => {
       console.log(response);
       this.setState({
-        locationName: response[0].locationName,
-        forecast: response[1],
+        locationName: response[1].locationName,
+        forecast: response[0],
         pollution: response[2],
         isLoading: false
       });
@@ -91,8 +91,7 @@ class App extends Component {
       <Weather
         city={locationName}
         icon={forecast.daily.data[0].icon}
-        windSpeed={forecast.daily.data[0].windSpeed}
-        pressure={forecast.daily.data[0].pressure}
+        feelsLike={forecast.daily.data[0].feelsLike}
         summary={forecast.daily.data[0].summary}
         tempMin={Math.round(forecast.daily.data[0].temperatureMin)}
         tempMax={Math.round(forecast.daily.data[0].temperatureMax)}

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Skycons from 'react-skycons';
 import HourWeather from './HourWeather';
 import AirPollution from './AirPollution';
 
-const Weather = ({ city, icon, windSpeed, pressure, summary, tempMin, tempMax, hourly, pollutionLevel, pm25, pm10 }) => {
+const Weather = ({ city, icon, feelsLike, summary, tempMin, tempMax, hourly, pollutionLevel, pm25, pm10 }) => {
   const bgColorClass = () => {
     let result;
 
@@ -35,16 +34,11 @@ const Weather = ({ city, icon, windSpeed, pressure, summary, tempMin, tempMax, h
         </div>
         <div className="col-2">
           <div className="icon-today">
-            <Skycons
-              color='white'
-              icon={icon.toUpperCase().replace(/-/g, '_')}
-              autoplay={true}
-            />
+            <img src={icon} width="50" height="50" />
           </div>
         </div>
         <div className="col">
-          <div className="wind-speed">{windSpeed}&nbsp;kph</div>
-          <div className="wind-speed">{pressure}&nbsp;hPa</div>
+          <div className="wind-speed">ST&nbsp;{feelsLike}</div>
         </div>
         <div className="col text-right">
           <div className="temp">min&nbsp;{tempMin}&deg;C</div>
@@ -53,7 +47,7 @@ const Weather = ({ city, icon, windSpeed, pressure, summary, tempMin, tempMax, h
       </div>
       <hr/>
       <div className="row justify-content-center">
-        {hourly.data.slice(0,9).map((object, i) => <div className="col-xs" style={{padding: '3px'}} key={object.time}><HourWeather data={object} /></div>)}
+        {hourly.data.slice(0,6).map((object, i) => <div className="col-xs" style={{padding: '3px'}} key={object.time}><HourWeather data={object} /></div>)}
       </div>
       <div className="row">
         <div className="col text-center">
@@ -73,8 +67,7 @@ const Weather = ({ city, icon, windSpeed, pressure, summary, tempMin, tempMax, h
 Weather.propTypes = {
   city: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  windSpeed: PropTypes.number.isRequired,
-  pressure: PropTypes.number.isRequired,
+  feelsLike: PropTypes.number.isRequired,
   summary: PropTypes.string.isRequired,
   tempMin: PropTypes.number.isRequired,
   tempMax: PropTypes.number.isRequired,

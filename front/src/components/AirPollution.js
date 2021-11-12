@@ -23,7 +23,7 @@ const AirPolution = ({ pollutionLevel, pm25, pm10 }) => {
   return (
     <div className="row">
       <div className="col-2 text-center">
-        <FontAwesomeIcon icon={pollutionLevelIcons[pollutionLevel]} size="3x"/>
+        <FontAwesomeIcon icon={pollutionLevelIcons[pollutionLevel]} size="2x"/>
       </div>
       <div className="col text-center">
         <div className="pm">

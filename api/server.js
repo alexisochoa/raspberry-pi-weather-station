@@ -1,32 +1,70 @@
+require('dotenv').config()
 const express = require('express');
-const dotEnvConfig = require('dotenv').config();
 const request = require('request-promise-native');
 const cors = require('cors');
 
 const app = express();
 app.use(cors());
 const port = process.env.PORT || 8080;
-let lat, lng, locationName;
+let locationName;
+let geocode;
+
+const lat = process.env.LAT;
+const lng = process.env.LON;
+const apiKey = process.env.OPENWEATHER_API_KEY;
 
 const getLatAndLng = async () => {
-  const geoApiUri = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(dotEnvConfig.parsed['CITY'])}&key=${dotEnvConfig.parsed['GOOGLE_API_KEY']}`;
-  const geocode = await request({ uri: geoApiUri, json: true });
+  const geoApiUri = `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&lat=${lat}&lon=${lng}&units=metric&lang=es`;
   return {
-    lat: geocode['results'][0]['geometry']['location']['lat'],
-    lng: geocode['results'][0]['geometry']['location']['lng'],
-    locationName: geocode['results'][0]['formatted_address']
+    data: await request({ uri: geoApiUri, json: true })
   }
 };
 
+const getData = async(data) => {
+  const result = [];
+  data.map(d => {
+    result.push({
+      time: d.dt,
+      precipIntensity: d.humidity,
+      temperature: d.temp,
+      icon: `http://openweathermap.org/img/wn/${d.weather[0].icon}@2x.png`
+    });
+  });
+  return result;
+}
+
 app.get('/api/forecast', async (req, res) => {
-  const forecastUri = `https://api.darksky.net/forecast/${dotEnvConfig.parsed['DARK_SKY_API_KEY']}/${lat},${lng}?units=ca&lang=pl`;
-  const forecast = await request({ uri: forecastUri, json: true });
+  const forecastUri = `https://api.openweathermap.org/data/2.5/onecall?appid=${apiKey}&lat=${lat}&lon=${lng}&units=metric&lang=es`;
+  const respForecast = await request({ uri: forecastUri, json: true });
+  const forecast = {
+    daily: {
+      data: [ 
+        {
+          icon: `http://openweathermap.org/img/wn/${geocode.weather[0].icon}@2x.png`,
+          feelsLike: geocode.main.feels_like,
+          pressure: geocode.main.pressure,
+          summary: geocode.weather[0].description,
+          temperatureMin: geocode.main.temp_min,
+          temperatureMax: geocode.main.temp_max
+        }
+      ]
+    },
+    hourly: {
+      data: await getData(respForecast.hourly)
+    }
+  };
+
   res.json(forecast);
 });
 
 app.get('/api/air', async (req, res) => {
-  const airlyUri = `https://airapi.airly.eu/v1/nearestSensor/measurements?latitude=${lat}&longitude=${lng}&maxDistance=1000`
-  const pollution = await request({ uri: airlyUri, headers: { 'apikey': dotEnvConfig.parsed['AIRLY_API_KEY'] }, json: true });
+  const airlyUri = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lng}&appid=${apiKey}`
+  const pollutionResp = await request({ uri: airlyUri, json: true });
+  pollution = {
+    pollutionLevel: pollutionResp.list[0].main.aqi,
+    pm25: pollutionResp.list[0].components.pm2_5,
+    pm10: pollutionResp.list[0].components.pm10
+  };
   res.json(pollution);
 });
 
@@ -37,7 +75,8 @@ app.get('/api/location', (req, res) => {
 app.listen(port, () => {
   getLatAndLng()
   .then(response => {
-    ({ lat, lng, locationName } = response);
+    locationName = response.data.name;
+    geocode = response.data;
     console.log(`Listening on port ${port}`);
   })
   .catch(error => {
