@@ -22,7 +22,6 @@ const getLatAndLng = async () => {
 const getForecast = async() => {
   const forecastUri = `https://api.openweathermap.org/data/2.5/onecall?appid=${apiKey}&lat=${lat}&lon=${lng}&units=metric&lang=es`;
   respForecast = await request({ uri: forecastUri, json: true });
-  console.log(respForecast);
   return {
     data: await request({uri: forecastUri, json: true})
   };
