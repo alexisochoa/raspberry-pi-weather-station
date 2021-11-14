@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import HourWeather from './HourWeather';
-import AirPollution from './AirPollution';
 
-const Weather = ({ city, icon, feelsLike, summary, tempMin, tempMax, hourly, pollutionLevel, pm25, pm10 }) => {
+const Weather = ({ time, city, icon, temperature, summary, tempMin, tempMax, hourly }) => {
   const bgColorClass = () => {
     let result;
 
@@ -31,14 +30,15 @@ const Weather = ({ city, icon, feelsLike, summary, tempMin, tempMax, hourly, pol
       <div className="row justify-content-center">
         <div className="col-4">
           <div className="city">{city}</div>
+          <div className="last-find">{time}</div>
         </div>
         <div className="col-2">
           <div className="icon-today">
             <img src={icon} width="50" height="50" alt="weather_img" />
           </div>
         </div>
-        <div className="col">
-          <div className="wind-speed">ST&nbsp;{feelsLike}</div>
+        <div className="col text-center">
+          <div className="actual-temp">&nbsp;{temperature}</div>
         </div>
         <div className="col text-right">
           <div className="temp">min&nbsp;{tempMin}&deg;C</div>
@@ -47,34 +47,26 @@ const Weather = ({ city, icon, feelsLike, summary, tempMin, tempMax, hourly, pol
       </div>
       <hr/>
       <div className="row justify-content-center">
-        {hourly.data.slice(0,6).map((object, i) => <div className="col-xs" style={{padding: '3px'}} key={object.time}><HourWeather data={object} /></div>)}
+        {hourly.data.slice(1,8).map((object, i) => <div className="col-xs" style={{padding: '3px'}} key={object.time}><HourWeather data={object} /></div>)}
       </div>
       <div className="row">
         <div className="col text-center">
           <div className="summary">{summary}</div>
         </div>
       </div>
-      <hr/>
-      <AirPollution
-        pollutionLevel={pollutionLevel}
-        pm25={pm25}
-        pm10={pm10}
-      />
     </div>
   );
 };
 
 Weather.propTypes = {
+  lastFind: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  feelsLike: PropTypes.number.isRequired,
+  temperature: PropTypes.number.isRequired,
   summary: PropTypes.string.isRequired,
   tempMin: PropTypes.number.isRequired,
   tempMax: PropTypes.number.isRequired,
-  hourly: PropTypes.object.isRequired,
-  pollutionLevel: PropTypes.number.isRequired,
-  pm25: PropTypes.number.isRequired,
-  pm10: PropTypes.number.isRequired
+  hourly: PropTypes.object.isRequired
 }
 
 export default Weather;

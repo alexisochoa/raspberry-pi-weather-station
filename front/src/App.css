@@ -48,3 +48,13 @@ hr {
   display: flex;
   align-items: center;
 }
+
+.last-find {
+  font-size: 11px;
+}
+
+.actual-temp {
+  height: 40px;
+  width: 70px;
+  vertical-align: middle;
+}
