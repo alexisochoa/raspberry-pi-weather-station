@@ -7,7 +7,7 @@ const app = express();
 const lat = process.env.LAT;
 const lng = process.env.LON;
 const apiKey = process.env.OPENWEATHER_API_KEY;
-const port = process.env.PORT || 8080;
+const port = 8081;
 
 app.use(cors());
 let geocode, respForecast;

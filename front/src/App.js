@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import Weather from './components/Weather.js';
 import 'bootstrap/dist/css/bootstrap.css';
-require('dotenv').config();
-const port = process.env.PORT || 8080;
 
 class App extends Component {
   state = {
@@ -22,7 +20,7 @@ class App extends Component {
   }
 
   callForecastApi = async () => {
-    const response = await fetch(`http://localhost:${port}/api/forecast`);
+    const response = await fetch(`http://localhost:8081/api/forecast`);
     const body = await response;
 
     if (response.status !== 200) throw Error('Error occured during fetching the forecast');
